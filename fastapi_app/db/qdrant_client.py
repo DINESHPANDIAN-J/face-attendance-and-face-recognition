@@ -1,5 +1,6 @@
 from qdrant_client import QdrantClient
-from qdrant_client.models import VectorParams, Distance
+from qdrant_client.http.models import VectorParams, Distance, PointStruct
+import uuid
 
 client = QdrantClient(host="localhost", port=6333)
 
@@ -10,14 +11,16 @@ def setup_collection(collection_name: str, vector_dim: int):
             vectors_config = VectorParams(size=vector_dim, distance=Distance.COSINE)
         )
         
-def insert_face_embedding(collection, person_id, embedding):
+COLLECTION_NAME = "user_embeddings"
+
+def store_user_embedding(name, embedding, liveness_score):
+    user_id = str(uuid.uuid4())
     client.upsert(
-        collection_name=collection,
-        points=[{
-            ""id": person_id,
-            "vector": embedding.tolist(),
-            "payload": {
-                "person_id": person_id
-            }
-        }]
+        collection_name=COLLECTION_NAME,
+        points=[PointStruct(
+            id=user_id,
+            vector=embedding,
+            payload={"name": name, "liveness_score": liveness_score}
+        )]
     )
+    return user_id
