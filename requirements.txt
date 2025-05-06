@@ -1,4 +1,9 @@
 numpy
+matplotlib
 opencv-python
 pandas
 qdrant-client
+torch
+onnxruntime
+insightface
+facenet-pytorch
