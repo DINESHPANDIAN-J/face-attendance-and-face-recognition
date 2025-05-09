@@ -7,3 +7,4 @@ torch
 onnxruntime
 insightface
 facenet-pytorch
+fastapi

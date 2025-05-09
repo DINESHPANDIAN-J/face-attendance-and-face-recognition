@@ -1,9 +1,12 @@
 from fastapi import FastAPI, Form
+from fastapi_app.routers import evaluate 
 from uuid import uuid4
 import os
 import cv2
 
 app = FastAPI()
+
+app.include_router(evaluate.router, prefix="/api")
 
 @app.post("/capture_faces/")
 def capture_faces(name: str = Form(...)):
@@ -13,7 +16,7 @@ def capture_faces(name: str = Form(...)):
     os.makedirs(save_dir, exist_ok=True)
 
     # Initialize webcam
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     if not cap.isOpened():
         return {"error": "Webcam not accessible"}
 
